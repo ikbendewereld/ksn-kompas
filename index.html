@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#1B5E43">
+  <title>Kindcentrum Stella Nova — Vind ons</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --green:       #1B5E43;
+      --green-mid:   #4D8C52;
+      --green-tint:  #EAF3ED;
+      --green-btn:   #1B5E43;
+      --compass-bg:  #E2DED8;
+      --compass-rim: #C8C4BE;
+      --tick-main:   #8A8680;
+      --tick-minor:  #C4C0BA;
+      --white:       #FFFFFF;
+      --off-white:   #F8F7F4;
+      --text:        #1A1A18;
+      --text-sub:    #656560;
+      --shadow:      rgba(27, 94, 67, 0.22);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { background: var(--white); }
+
+    body {
+      font-family: 'Nunito', system-ui, sans-serif;
+      background: var(--white);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 36px 24px 52px;
+      max-width: 430px;
+      margin: 0 auto;
+      min-height: 100dvh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Logo ─────────────────────────────────── */
+    .logo-wrap {
+      margin-bottom: 8px;
+    }
+    .logo-wrap img {
+      height: 78px;
+      width: auto;
+      display: block;
+      filter: drop-shadow(0 2px 10px rgba(0,0,0,0.07));
+    }
+
+    /* ── Thin rule ───────────────────────────── */
+    .rule {
+      width: 40px;
+      height: 2.5px;
+      background: var(--green-mid);
+      border-radius: 2px;
+      margin: 20px 0 24px;
+      opacity: 0.5;
+    }
+
+    /* ── Eyebrow + Heading ───────────────────── */
+    .eyebrow {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--green-mid);
+      text-align: center;
+      margin-bottom: 6px;
+    }
+
+    .main-heading {
+      font-size: 38px;
+      font-weight: 900;
+      color: var(--green);
+      text-align: center;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin-bottom: 32px;
+    }
+
+    /* ── Compass ─────────────────────────────── */
+    .compass-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      margin-bottom: 28px;
+    }
+
+    .compass-disc {
+      position: relative;
+      width: min(288px, 78vw);
+      height: min(288px, 78vw);
+      border-radius: 50%;
+      background: radial-gradient(circle at 38% 32%, #ECEAE4 0%, #D8D4CE 100%);
+      box-shadow:
+        0 12px 40px rgba(0,0,0,0.13),
+        inset 0 2px 5px rgba(255,255,255,0.7),
+        inset 0 -2px 6px rgba(0,0,0,0.08);
+    }
+
+    .compass-svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+      border-radius: 50%;
+      overflow: visible;
+    }
+
+    /* Rotating needle group */
+    #needle-g {
+      transform-box: fill-box;
+      transform-origin: 50% 50%;
+      transition: transform 0.45s cubic-bezier(0.34, 1.08, 0.64, 1);
+    }
+
+    /* ── Compass info ────────────────────────── */
+    .compass-info {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      margin-top: 22px;
+      width: 100%;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: var(--green-tint);
+      color: var(--green);
+      border-radius: 100px;
+      padding: 8px 18px;
+      font-size: 14px;
+      font-weight: 700;
+      min-height: 36px;
+    }
+
+    .status-line {
+      font-size: 13px;
+      color: var(--text-sub);
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .orient-btn {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      border: 1.5px solid var(--green-mid);
+      background: transparent;
+      color: var(--green);
+      border-radius: 100px;
+      padding: 9px 20px;
+      font-size: 14px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .orient-btn.show { display: inline-flex; }
+    .orient-btn:active { background: var(--green-tint); }
+
+    .arrived-pill {
+      display: none;
+      align-items: center;
+      gap: 6px;
+      background: #ECFDF3;
+      border: 1.5px solid #6CE9A6;
+      color: #027A48;
+      border-radius: 100px;
+      padding: 8px 18px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .arrived-pill.show { display: inline-flex; }
+
+    .error-note {
+      display: none;
+      background: #FEF3F2;
+      border: 1px solid #FECDCA;
+      color: #B42318;
+      border-radius: 12px;
+      padding: 13px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      text-align: center;
+      width: 100%;
+    }
+    .error-note.show { display: block; }
+
+    @keyframes pulse {
+      0%,100% { opacity: 1; }
+      50%      { opacity: 0.5; }
+    }
+    .pill.loading { animation: pulse 1.6s ease-in-out infinite; }
+
+    /* ── Section divider ─────────────────────── */
+    .section-div {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(to right, transparent, #E0DDD6, transparent);
+      margin: 36px 0;
+    }
+
+    /* ── Body section ────────────────────────── */
+    .body-block {
+      text-align: center;
+      padding: 0 4px;
+      margin-bottom: 32px;
+    }
+
+    .body-heading {
+      font-size: 28px;
+      font-weight: 900;
+      color: var(--text);
+      line-height: 1.18;
+      letter-spacing: -0.02em;
+      margin-bottom: 12px;
+    }
+
+    .body-text {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-sub);
+      line-height: 1.6;
+    }
+
+    /* ── CTA button ──────────────────────────── */
+    .cta {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      background: var(--green-btn);
+      color: #fff;
+      text-decoration: none;
+      padding: 18px 28px;
+      border-radius: 14px;
+      font-size: 17px;
+      font-weight: 800;
+      letter-spacing: 0.01em;
+      font-family: inherit;
+      box-shadow: 0 6px 22px var(--shadow);
+      transition: transform 0.15s, box-shadow 0.15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .cta:active {
+      transform: scale(0.97);
+      box-shadow: 0 3px 10px var(--shadow);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Logo -->
+  <div class="logo-wrap">
+    <img
+      src="https://kindcentrumstellanova.nl/wp-content/uploads/sites/10/2024/05/logo.png"
+      alt="Kindcentrum Stella Nova"
+      onerror="this.style.opacity='0'">
+  </div>
+
+  <div class="rule"></div>
+
+  <!-- Heading -->
+  <p class="eyebrow">Zoek ons kindcentrum</p>
+  <h1 class="main-heading">Volg het kompas!</h1>
+
+  <!-- Compass -->
+  <div class="compass-wrap">
+    <div class="compass-disc">
+      <svg id="compass-svg" class="compass-svg" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <filter id="needle-shadow" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#1B5E43" flood-opacity="0.25"/>
+          </filter>
+          <filter id="dot-shadow">
+            <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#1B5E43" flood-opacity="0.35"/>
+          </filter>
+          <radialGradient id="needle-n" cx="50%" cy="30%" r="60%">
+            <stop offset="0%" stop-color="#2E7A59"/>
+            <stop offset="100%" stop-color="#1B5E43"/>
+          </radialGradient>
+          <radialGradient id="needle-s" cx="50%" cy="70%" r="60%">
+            <stop offset="0%" stop-color="#A8C4B4"/>
+            <stop offset="100%" stop-color="#8AADA0"/>
+          </radialGradient>
+        </defs>
+
+        <!-- Static outer ring -->
+        <circle cx="150" cy="150" r="143" fill="none" stroke="#B8B4AE" stroke-width="1.5"/>
+
+        <!-- Tick marks — generated by JS -->
+        <g id="tick-g"></g>
+
+        <!-- Cardinal direction labels (static) -->
+        <text x="150" y="24"  text-anchor="middle" font-family="Nunito,sans-serif" font-size="15" font-weight="800" fill="#6A6660" letter-spacing="0.06em">N</text>
+        <text x="276" y="155" text-anchor="middle" font-family="Nunito,sans-serif" font-size="15" font-weight="800" fill="#6A6660" letter-spacing="0.06em">O</text>
+        <text x="150" y="287" text-anchor="middle" font-family="Nunito,sans-serif" font-size="15" font-weight="800" fill="#6A6660" letter-spacing="0.06em">Z</text>
+        <text x="24"  y="155" text-anchor="middle" font-family="Nunito,sans-serif" font-size="15" font-weight="800" fill="#6A6660" letter-spacing="0.06em">W</text>
+
+        <!-- Inner guidance ring -->
+        <circle cx="150" cy="150" r="116" fill="none" stroke="#C8C4BE" stroke-width="0.75" stroke-dasharray="4 6"/>
+
+        <!-- Needle group (rotates) -->
+        <g id="needle-g" filter="url(#needle-shadow)">
+          <!-- North half: dark green -->
+          <polygon points="150,30 163,148 150,144 137,148" fill="url(#needle-n)"/>
+          <!-- South half: lighter -->
+          <polygon points="150,270 163,152 150,156 137,152" fill="url(#needle-s)"/>
+        </g>
+
+        <!-- Center cap (static, on top) -->
+        <circle cx="150" cy="150" r="11" fill="#1B5E43" filter="url(#dot-shadow)"/>
+        <circle cx="150" cy="150" r="5"  fill="white" opacity="0.45"/>
+      </svg>
+    </div>
+
+    <!-- Info below compass -->
+    <div class="compass-info">
+      <div class="pill loading" id="dist-pill">
+        <svg width="14" height="16" viewBox="0 0 14 16" fill="none">
+          <path d="M7 0C3.686 0 1 2.686 1 6c0 4.418 6 10 6 10s6-5.582 6-10C13 2.686 10.314 0 7 0zm0 8.5A2.5 2.5 0 1 1 7 3.5a2.5 2.5 0 0 1 0 5z" fill="#1B5E43"/>
+        </svg>
+        <span id="dist-text">Locatie bepalen…</span>
+      </div>
+
+      <div class="arrived-pill" id="arrived-pill">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm3.707 6.293-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 1 1 1.414-1.414L7 8.172l3.293-3.293a1 1 0 1 1 1.414 1.414z" fill="#027A48"/>
+        </svg>
+        Je bent er bijna!
+      </div>
+
+      <p class="status-line" id="status-line">Sta locatietoegang toe om te beginnen</p>
+
+      <button class="orient-btn" id="orient-btn" onclick="requestOrientation()">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M8 1L6.5 5.5H2L5.75 8.5 4.5 13 8 10.5 11.5 13 10.25 8.5 14 5.5H9.5L8 1Z" fill="#1B5E43"/>
+        </svg>
+        Schakel kompas in
+      </button>
+
+      <div class="error-note" id="error-note">
+        Locatietoegang geweigerd. Sta locatie toe in je browserinstellingen en laad de pagina opnieuw.
+      </div>
+    </div>
+  </div>
+
+  <div class="section-div"></div>
+
+  <!-- Body text -->
+  <div class="body-block">
+    <h2 class="body-heading">Benieuwd naar<br>ons onderwijs?</h2>
+    <p class="body-text">Laten we snel afspreken voor een<br>persoonlijke kennismaking!</p>
+  </div>
+
+  <!-- CTA -->
+  <a
+    href="mailto:info@kindcentrumstellanova.nl?subject=Verzoek%20kennismaking%20Kindcentrum%20Stella%20Nova&body=Hallo%2C%0A%0AIk%20ben%20ge%C3%AFnteresseerd%20in%20een%20persoonlijke%20kennismaking%20met%20Kindcentrum%20Stella%20Nova.%0A%0AMet%20vriendelijke%20groet%2C"
+    class="cta">
+    Maak een afspraak&nbsp;»
+  </a>
+
+  <script>
+    // ── Target: Wederiklaan 400, Lelystad ─────────────────────────
+    // Coordinates verified via OpenStreetMap / Nominatim
+    const TARGET = { lat: 52.5089, lon: 5.4783 };
+
+    // ── State ─────────────────────────────────────────────────────
+    let userLat, userLon;
+    let compassHeading = null;   // null = no orientation sensor
+    let needleRotDeg   = 0;      // accumulated rotation (handles wrap)
+    let bearingDeg     = 0;
+    let orientActive   = false;
+
+    // ── DOM refs ──────────────────────────────────────────────────
+    const needleG    = document.getElementById('needle-g');
+    const distPill   = document.getElementById('dist-pill');
+    const distText   = document.getElementById('dist-text');
+    const statusLine = document.getElementById('status-line');
+    const orientBtn  = document.getElementById('orient-btn');
+    const errorNote  = document.getElementById('error-note');
+    const arrivedPill = document.getElementById('arrived-pill');
+
+    // ── Build tick marks ──────────────────────────────────────────
+    (function buildTicks() {
+      const ns  = 'http://www.w3.org/2000/svg';
+      const g   = document.getElementById('tick-g');
+      const cx  = 150, cy = 150;
+      const R   = 142; // outer edge of tick
+
+      for (let deg = 0; deg < 360; deg += 5) {
+        const rad  = (deg - 90) * Math.PI / 180;
+        const cos  = Math.cos(rad), sin = Math.sin(rad);
+        const isCard  = deg % 90 === 0;
+        const isThird = deg % 30 === 0;
+        const len  = isCard ? 22 : isThird ? 14 : 8;
+        const w    = isCard ? 2 : isThird ? 1.5 : 1;
+        const col  = isCard ? '#8A8680' : isThird ? '#AAAA A6'.replace(' ','') : '#CACAC6';
+
+        const x1 = cx + R * cos,           y1 = cy + R * sin;
+        const x2 = cx + (R - len) * cos,   y2 = cy + (R - len) * sin;
+        const line = document.createElementNS(ns, 'line');
+        line.setAttribute('x1', x1.toFixed(2)); line.setAttribute('y1', y1.toFixed(2));
+        line.setAttribute('x2', x2.toFixed(2)); line.setAttribute('y2', y2.toFixed(2));
+        line.setAttribute('stroke', col);
+        line.setAttribute('stroke-width', w);
+        line.setAttribute('stroke-linecap', 'round');
+        g.appendChild(line);
+      }
+    })();
+
+    // ── Math helpers ──────────────────────────────────────────────
+    function bearing(lat1, lon1, lat2, lon2) {
+      const r  = Math.PI / 180;
+      const f1 = lat1 * r, f2 = lat2 * r;
+      const dl = (lon2 - lon1) * r;
+      const y  = Math.sin(dl) * Math.cos(f2);
+      const x  = Math.cos(f1) * Math.sin(f2) - Math.sin(f1) * Math.cos(f2) * Math.cos(dl);
+      return (Math.atan2(y, x) * 180 / Math.PI + 360) % 360;
+    }
+
+    function haversine(lat1, lon1, lat2, lon2) {
+      const R  = 6371;
+      const r  = Math.PI / 180;
+      const df = (lat2 - lat1) * r;
+      const dl = (lon2 - lon1) * r;
+      const a  = Math.sin(df/2)**2 + Math.cos(lat1*r)*Math.cos(lat2*r)*Math.sin(dl/2)**2;
+      return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    }
+
+    // Smooth rotation — avoids 350° → 10° spinning backwards
+    function rotateTo(targetDeg) {
+      let delta = targetDeg - (needleRotDeg % 360);
+      if (delta >  180) delta -= 360;
+      if (delta < -180) delta += 360;
+      needleRotDeg += delta;
+      needleG.style.transform = `rotate(${needleRotDeg}deg)`;
+    }
+
+    function updateNeedle() {
+      if (userLat === undefined) return;
+      bearingDeg = bearing(userLat, userLon, TARGET.lat, TARGET.lon);
+      const rot  = compassHeading !== null
+        ? bearingDeg - compassHeading   // true compass mode
+        : bearingDeg;                   // bearing-from-north fallback
+      rotateTo(rot);
+    }
+
+    // ── Geolocation ───────────────────────────────────────────────
+    if (!('geolocation' in navigator)) {
+      distText.textContent = 'Locatie niet ondersteund';
+      distPill.classList.remove('loading');
+      statusLine.textContent = 'Je browser ondersteunt geen locatiediensten';
+    } else {
+      navigator.geolocation.watchPosition(
+        pos => {
+          userLat = pos.coords.latitude;
+          userLon = pos.coords.longitude;
+          errorNote.classList.remove('show');
+
+          const km   = haversine(userLat, userLon, TARGET.lat, TARGET.lon);
+          const label = km < 0.1
+            ? 'Je bent er bijna!'
+            : km < 1
+              ? `${Math.round(km * 1000)} m van ons vandaan`
+              : km < 10
+                ? `${km.toFixed(1)} km van ons vandaan`
+                : `${Math.round(km)} km van ons vandaan`;
+
+          distPill.classList.remove('loading');
+          distText.textContent = label;
+
+          if (km < 0.1) {
+            arrivedPill.classList.add('show');
+            distPill.style.display = 'none';
+            statusLine.textContent = 'Welkom bij Kindcentrum Stella Nova!';
+          } else {
+            arrivedPill.classList.remove('show');
+            distPill.style.display = '';
+            if (orientActive) {
+              statusLine.textContent = 'Kompas actief — draai mee!';
+            } else if (typeof DeviceOrientationEvent !== 'undefined' &&
+                       typeof DeviceOrientationEvent.requestPermission === 'function') {
+              orientBtn.classList.add('show');
+              statusLine.textContent = 'Activeer het kompas voor de richting';
+            } else {
+              statusLine.textContent = 'De pijl wijst richting Wederiklaan 400';
+            }
+          }
+
+          updateNeedle();
+        },
+        err => {
+          distPill.classList.remove('loading');
+          if (err.code === 1) {
+            errorNote.classList.add('show');
+            distText.textContent = 'Locatie niet beschikbaar';
+            statusLine.textContent = '';
+          }
+        },
+        { enableHighAccuracy: true, maximumAge: 5000, timeout: 15000 }
+      );
+    }
+
+    // ── Device orientation ────────────────────────────────────────
+    function handleOrientation(e) {
+      let h = null;
+
+      if (typeof e.webkitCompassHeading === 'number') {
+        // iOS — webkitCompassHeading is already CW degrees from true north
+        h = e.webkitCompassHeading;
+      } else if (e.absolute && typeof e.alpha === 'number') {
+        // Android absolute — alpha is CCW degrees from geographic north
+        h = (360 - e.alpha + 360) % 360;
+      }
+
+      if (h === null) return;
+      compassHeading = h;
+      orientActive   = true;
+      updateNeedle();
+
+      if (userLat !== undefined) {
+        statusLine.textContent = 'Kompas actief — draai mee!';
+      }
+    }
+
+    // Auto-listen on non-iOS (no permission prompt required)
+    if (typeof DeviceOrientationEvent !== 'undefined') {
+      if (typeof DeviceOrientationEvent.requestPermission !== 'function') {
+        // Chrome/Android: prefer absolute event
+        if ('ondeviceorientationabsolute' in window) {
+          window.addEventListener('deviceorientationabsolute', handleOrientation, true);
+        }
+        // Fallback: regular deviceorientation (only useful if absolute not available)
+        window.addEventListener('deviceorientation', e => {
+          if (!orientActive) handleOrientation(e);
+        }, true);
+      }
+    }
+
+    // iOS 13+ — needs user gesture before requesting
+    async function requestOrientation() {
+      try {
+        const result = await DeviceOrientationEvent.requestPermission();
+        if (result === 'granted') {
+          window.addEventListener('deviceorientation', handleOrientation, true);
+          orientBtn.classList.remove('show');
+        }
+      } catch (err) {
+        console.warn('Orientation permission error:', err);
+      }
+    }
+  </script>
+</body>
+</html>
