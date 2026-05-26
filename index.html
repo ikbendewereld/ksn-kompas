@@ -75,6 +75,11 @@
       );
     }
 
+    .logo-paper a {
+      display: inline-block;
+      line-height: 0;
+    }
+
     .logo-paper img {
       height: 94px;
       width: auto;
@@ -281,10 +286,9 @@
   <!-- Logo white paper area -->
   <div class="logo-outer">
     <div class="logo-paper">
-      <img
-        src="https://kindcentrumstellanova.nl/wp-content/uploads/sites/10/2024/05/logo.png"
-        alt="Kindcentrum Stella Nova"
-        onerror="this.style.opacity='0'">
+      <a href="https://kindcentrumstellanova.nl" target="_blank" rel="noopener noreferrer" aria-label="Ga naar de website van Kindcentrum Stella Nova">
+        <img src="logo.png" alt="Kindcentrum Stella Nova">
+      </a>
     </div>
   </div>
 
@@ -312,21 +316,21 @@
           <!-- Tick marks -->
           <g id="tick-g"></g>
 
+          <!-- Cardinal labels — under needle (realistic compass: rose is on the dial, needle rotates above) -->
+          <text x="150" y="62"  text-anchor="middle" dominant-baseline="middle" font-family="Inter,sans-serif" font-size="22" font-weight="900" fill="white">N</text>
+          <text x="238" y="150" text-anchor="middle" dominant-baseline="middle" font-family="Inter,sans-serif" font-size="22" font-weight="900" fill="white">O</text>
+          <text x="150" y="238" text-anchor="middle" dominant-baseline="middle" font-family="Inter,sans-serif" font-size="22" font-weight="900" fill="white">Z</text>
+          <text x="62"  y="150" text-anchor="middle" dominant-baseline="middle" font-family="Inter,sans-serif" font-size="22" font-weight="900" fill="white">W</text>
+
           <!-- Rotating needle — both halves share exact base at y=150 -->
           <g id="needle-g" filter="url(#nshadow)">
             <polygon points="150,30 164,150 136,150" fill="#E82020"/>
             <polygon points="150,270 164,150 136,150" fill="white"/>
           </g>
 
-          <!-- Center cap -->
+          <!-- Center cap — always on top -->
           <circle cx="150" cy="150" r="10" fill="#174943"/>
           <circle cx="150" cy="150" r="4"  fill="rgba(255,255,255,0.35)"/>
-
-          <!-- Cardinal labels — on top of needle, dark stroke for readability on any bg -->
-          <text x="150" y="62"  text-anchor="middle" dominant-baseline="middle" font-family="Inter,sans-serif" font-size="19" font-weight="900" fill="white" stroke="#174943" stroke-width="3" paint-order="stroke fill">N</text>
-          <text x="238" y="150" text-anchor="middle" dominant-baseline="middle" font-family="Inter,sans-serif" font-size="19" font-weight="900" fill="white" stroke="#174943" stroke-width="3" paint-order="stroke fill">O</text>
-          <text x="150" y="238" text-anchor="middle" dominant-baseline="middle" font-family="Inter,sans-serif" font-size="19" font-weight="900" fill="white" stroke="#174943" stroke-width="3" paint-order="stroke fill">Z</text>
-          <text x="62"  y="150" text-anchor="middle" dominant-baseline="middle" font-family="Inter,sans-serif" font-size="19" font-weight="900" fill="white" stroke="#174943" stroke-width="3" paint-order="stroke fill">W</text>
         </svg>
       </div>
 
@@ -335,8 +339,8 @@
         <p class="dist-line loading" id="dist-line">
           <!-- Flag icon matching Figma design -->
           <svg width="14" height="17" viewBox="0 0 14 17" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0">
-            <line x1="2.5" y1="1" x2="2.5" y2="16" stroke="#174943" stroke-width="2" stroke-linecap="round"/>
-            <path d="M2.5 1.5 L13 5.5 L2.5 9.5 Z" fill="#174943"/>
+            <line x1="2.5" y1="1" x2="2.5" y2="16" stroke="#E82020" stroke-width="2" stroke-linecap="round"/>
+            <path d="M2.5 1.5 L13 5.5 L2.5 9.5 Z" fill="#E82020"/>
           </svg>
           <span class="num" id="dist-num">Locatie bepalen…</span><span id="dist-sfx"></span>
         </p>
@@ -472,7 +476,7 @@
           distNum.textContent = km < 1
             ? `${Math.round(km*1000)} meter`
             : km < 10 ? `${km.toFixed(1)} km` : `${Math.round(km)} km`;
-          distSfx.textContent = ' hier vandaan';
+          distSfx.textContent = ' vanaf Wederiklaan 400';
 
           if (orientActive) {
             activateBtn.classList.add('hidden');
