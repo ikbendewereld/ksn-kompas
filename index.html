@@ -38,39 +38,45 @@
     }
 
     /* ── Logo paper area ─────────────────────── */
+    .logo-outer {
+      width: 100%;
+      /* drop-shadow follows the clipped shape */
+      filter: drop-shadow(0 5px 10px rgba(0,0,0,0.12));
+    }
+
     .logo-paper {
       width: 100%;
       background: var(--white);
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 20px 24px 14px;
-      position: relative;
-    }
-
-    /* Torn paper bottom edge */
-    .logo-paper::after {
-      content: '';
-      position: absolute;
-      bottom: -13px;
-      left: 0;
-      width: 100%;
-      height: 15px;
-      background: var(--white);
+      padding: 24px 17px 36px;
+      /* Torn paper edge via clip-path — clipping also clips the background */
       clip-path: polygon(
-        0% 0%, 2.5% 100%, 5% 10%, 8% 90%, 11% 5%,
-        14% 85%, 17% 20%, 20% 95%, 23% 5%, 26% 80%,
-        29% 15%, 32% 90%, 35% 5%, 38% 85%, 41% 20%,
-        44% 90%, 47% 5%, 50% 85%, 53% 20%, 56% 95%,
-        59% 5%, 62% 80%, 65% 20%, 68% 90%, 71% 5%,
-        74% 80%, 77% 25%, 80% 90%, 83% 10%, 86% 80%,
-        89% 20%, 92% 90%, 95% 5%, 97.5% 80%, 100% 0%
+        0 0, 100% 0,
+        100% calc(100% - 16px),
+        98.5% 100%, 96%  calc(100% - 10px),
+        93%   calc(100% - 2px),  90%  100%,
+        87%   calc(100% - 13px), 84%  calc(100% - 3px),
+        81%   calc(100% - 1px),  78%  calc(100% - 14px),
+        75%   100%,              72%  calc(100% - 7px),
+        69%   calc(100% - 16px), 65%  calc(100% - 4px),
+        62%   calc(100% - 1px),  59%  calc(100% - 14px),
+        56%   calc(100% - 3px),  53%  100%,
+        50%   calc(100% - 10px), 47%  calc(100% - 2px),
+        44%   calc(100% - 14px), 41%  100%,
+        38%   calc(100% - 6px),  35%  calc(100% - 2px),
+        32%   calc(100% - 12px), 29%  100%,
+        26%   calc(100% - 8px),  23%  calc(100% - 16px),
+        20%   calc(100% - 4px),  17%  100%,
+        14%   calc(100% - 10px), 11%  calc(100% - 3px),
+        8%    calc(100% - 14px), 5%   100%,
+        2.5%  calc(100% - 8px),  0    calc(100% - 16px)
       );
-      z-index: 2;
     }
 
     .logo-paper img {
-      height: 80px;
+      height: 94px;
       width: auto;
       display: block;
     }
@@ -273,11 +279,13 @@
 <body>
 
   <!-- Logo white paper area -->
-  <div class="logo-paper">
-    <img
-      src="https://kindcentrumstellanova.nl/wp-content/uploads/sites/10/2024/05/logo.png"
-      alt="Kindcentrum Stella Nova"
-      onerror="this.style.opacity='0'">
+  <div class="logo-outer">
+    <div class="logo-paper">
+      <img
+        src="https://kindcentrumstellanova.nl/wp-content/uploads/sites/10/2024/05/logo.png"
+        alt="Kindcentrum Stella Nova"
+        onerror="this.style.opacity='0'">
+    </div>
   </div>
 
   <div class="content">
